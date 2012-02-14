@@ -54,7 +54,7 @@ function define(query) {
 function example(query) {
   var response = urban(query);
   response.first( function(json) {
-    if(json.example){
+    if(json.example && query.length > 0){
       bot.speak(json.example && query.length > 0);
     }
     else {
@@ -63,7 +63,7 @@ function example(query) {
   });
 }
 
-var speakAboutSong(data) {
+function speakAboutSong(data) {
   var phrases = [];
   var d = data;
 
