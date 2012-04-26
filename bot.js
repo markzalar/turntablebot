@@ -145,7 +145,6 @@ function speakAboutSong(data) {
 bot.on('speak', function (data) {
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
-      var response = "";
       switch (command[0]) {
       case "autobob":
         if (command.length == 1) {
