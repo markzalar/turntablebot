@@ -1,10 +1,11 @@
 var Bot = require('ttapi');
 var http = require('http');
 var urban = require('urban');
-var AUTH = 'auth+live+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-var USERID = 'XXXXXXXXXXXXXXXXXXXXXXXX';
-var ROOMID = 'XXXXXXXXXXXXXXXXXXXXXXXX';
-var COMMAND_TRIGGER = 'BOT ';
+var globals = require('./globals');
+var AUTH = globals.AUTH;
+var USERID = globals.USERID;
+var ROOMID = globals.ROOMID;
+var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
 var autobob = false;
 var chatty = true;
 var bot = new Bot(AUTH, USERID, ROOMID);
