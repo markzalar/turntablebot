@@ -218,7 +218,7 @@ bot.on('speak', function (data) {
 bot.on('newsong', function(data) {
   if (autobob){
     //start bobbing when a new song starts after waiting a random number of seconds first 
-    sleep((Math.floor(Math.random()*20) + 3) * 1000);
+    sleep((Math.floor(Math.random()*2) + 1) * 1000);
     bot.vote('up');
   }
   if(chatty) {
