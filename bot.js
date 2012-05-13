@@ -224,4 +224,61 @@ bot.on('newsong', function(data) {
   if(chatty) {
     speakAboutSong(data);
   }
+  //Handle DJing if only 1 real DJ
+  bot.roomInfo(extended=false, function(data2) {
+    djCount = data2.room.metadata.djs.length;
+    currDJ = data2.room.metadata.current_dj;
+    currentlyDJing = false;
+    for (var i = 0; i < data2.room.metadata.djs.length; i++) {
+      if (data2.room.metadata.djs[i] == USERID) {
+        currentlyDJing = true;
+      }
+    }
+    if (djCount == 1 && currentlyDJing) {
+      bot.remDj();
+    }
+    if (djCount == 1 && !currentlyDJing) {
+      bot.addDj();
+    }
+    else if (djCount > 2 && currentlyDJing && currDJ != USERID) {
+      bot.remDj();
+    }
+  });
+});
+
+bot.on('add_dj', function(data) {
+  bot.roomInfo(extended=false, function(data2) {
+    djCount = data2.room.metadata.djs.length;
+    currentlyDJing = false;
+    currDJ = data2.room.metadata.current_dj;
+    for (var i = 0; i < data2.room.metadata.djs.length; i++) {
+      if (data2.room.metadata.djs[i] == USERID) {
+        currentlyDJing = true;
+      }
+    }
+    if (djCount == 1 && !currentlyDJing) {
+      bot.addDj();
+    }
+    else if (djCount > 2 && currentlyDJing && currDJ != USERID) {
+      bot.remDj();
+    }
+  });
+});
+
+bot.on('rem_dj', function(data) {
+  bot.roomInfo(extended=false, function(data2) {
+    djCount = data2.room.metadata.djs.length;
+    currentlyDJing = false;
+    for (var i = 0; i < data2.room.metadata.djs.length; i++) {
+      if (data2.room.metadata.djs[i] == USERID) {
+        currentlyDJing = true;
+      }
+    }
+    if (djCount == 1 && currentlyDJing) {
+      bot.remDj();
+    }
+    else if (djCount == 1 && !currentlyDJing) {
+      bot.addDj();
+    }
+  });
 });
