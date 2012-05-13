@@ -143,6 +143,17 @@ function speakAboutSong(data) {
 
 }
 
+function answerYesNo() {
+  var phrases = [];
+  phrases.push("yes");
+  phrases.push("no");
+  phrases.push("definitely");
+  phrases.push("no way");
+  phrases.push("absolutely");
+  phrases.push("absolutely not");
+  bot.speak(phrases[Math.floor(Math.random()*phrases.length)]);
+}
+
 bot.on('speak', function (data) {
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
@@ -180,6 +191,22 @@ bot.on('speak', function (data) {
       case "example":
         if (command.length > 1) {
           example(command.slice(1).join(" ")); 
+        }
+        break;
+      case "do":
+      case "does":
+      case "did":
+      case "will":
+      case "am":
+      case "are":
+      case "is":
+      case "were":
+      case "can":
+      case "could":
+      case "would":
+      case "should":
+        if (data.text.substr(-1) === "?") {
+          answerYesNo();
         }
         break;
       default:
