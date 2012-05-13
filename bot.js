@@ -6,8 +6,8 @@ var AUTH = globals.AUTH;
 var USERID = globals.USERID;
 var ROOMID = globals.ROOMID;
 var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
-var autobob = false;
-var chatty = true;
+var autobob = true;
+var chatty = false;
 var bot = new Bot(AUTH, USERID, ROOMID);
 
 function sleep(milliseconds) {
