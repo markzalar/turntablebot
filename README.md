@@ -3,7 +3,7 @@ A bot for [turntable.fm](http://turntable.fm) that looks up words and phrases on
 [urbandictionary.com](http://www.urbandictionary.com/).
 
 This bot makes use of the following packages.
-Alan Gilbert's [ttapi](https://github.com/alaingilbert/Turntable-API)
+Alain Gilbert's [ttapi](https://github.com/alaingilbert/Turntable-API)
 Murilo Santana's [urban](https://github.com/mvrilo/urban)
 ##Installation
 Install [node.js](http://nodejs.org/).  You'll also need [npm](http://npmjs.org/), but it
