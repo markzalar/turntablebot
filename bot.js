@@ -8,6 +8,10 @@ var ROOMID = globals.ROOMID;
 var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
 var autobob = true;
 var chatty = false;
+var countdownName = 'DJ XXXXX';
+var countdownScore = '10000';
+var scoreReached = false;
+var currentlyDJing = false;
 var bot = new Bot(AUTH, USERID, ROOMID);
 
 function sleep(milliseconds) {
@@ -246,6 +250,46 @@ bot.on('newsong', function(data) {
   });
 });
 
+bot.on('update_votes', function(data) {
+  //Call out Lamers
+  if (data.room.metadata.votelog[0][1] == "down")
+  {
+    lameID = data.room.metadata.votelog[0][0];
+    if (lameID == '') {
+      bot.speak('Somebody Lamed!');
+    }
+    else {
+      bot.roomInfo(extended=false, function(lameData) {
+        for (var i = 0; i < lameData.users.length; i++) {
+          if (lameData.users[i].userid == lameID && lameID != USERID) {
+           bot.speak(lameData.users[i].name + " Lamed!");
+          }
+        }
+      });
+    }
+  }
+  bot.roomInfo(extended=false, function(data2) {
+    currDJ = data2.room.metadata.current_dj;
+    for (var i = 0; i < data2.users.length; i++) {
+      if (data2.users[i].userid == currDJ) {
+        var name = data2.users[i].name;
+        if (name == countdownName){
+          var points = data2.users[i].points;
+          if (points < countdownScore){
+            bot.speak(countdownScore - points);
+          }
+          else if (points == countdownScore) {
+            if (!scoreReached) {
+              scoreReached = true;
+              celebrate(name);
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
 bot.on('add_dj', function(data) {
   bot.roomInfo(extended=false, function(data2) {
     djCount = data2.room.metadata.djs.length;
@@ -282,3 +326,7 @@ bot.on('rem_dj', function(data) {
     }
   });
 });
+
+function celebrate(name) {
+  bot.speak("wooooooo " + name);
+}
