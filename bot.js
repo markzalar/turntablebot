@@ -44,31 +44,23 @@ function toggleChatty() {
   }
 }
 
-function define(query, callback) {
+function lookup(query, callback) {
   var response = urban(query);
   response.first(function(json) {
-    var definition;
+    var entry = {}
     if(json.definition && query.length > 0){
-      definition = json.definition;
+      entry['definition'] = json.definition;
     }
     else {
-      definition = "I don't know that one.";
+      entry['definition'] = "I don't know that one.";
     }
-    callback(definition);
-  });
-}
-
-function example(query, callback) {
-  var response = urban(query);
-  response.first(function(json) {
-    var example;
     if(json.example && query.length > 0){
-      example = json.example;
+      entry['example'] = json.example;
     }
     else {
-      example = "I don't have an example of that.";
+      entry['example'] = "I don't have an example of that.";
     }
-    callback(example);
+    callback(entry);
   });
 }
 
@@ -193,12 +185,12 @@ bot.on('speak', function (data) {
         break;
       case "define":
         if (command.length > 1) {
-          define(command.slice(1).join(" "), function(definition) {bot.speak(definition);});
+          lookup(command.slice(1).join(" "), function(entry) {bot.speak(entry['definition']);});
         }
         break;
       case "example":
         if (command.length > 1) {
-          example(command.slice(1).join(" "), function(example) {bot.speak(example);});
+          lookup(command.slice(1).join(" "), function(entry) {bot.speak(entry['example']);});
         }
         break;
       case "do":
