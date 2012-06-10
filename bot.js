@@ -44,27 +44,31 @@ function toggleChatty() {
   }
 }
 
-function define(query) {
+function define(query, callback) {
   var response = urban(query);
   response.first(function(json) {
+    var definition;
     if(json.definition && query.length > 0){
-      bot.speak(json.definition);
+      definition = json.definition;
     }
     else {
-      bot.speak("I don't know that one."); 
+      definition = "I don't know that one.";
     }
+    callback(definition);
   });
 }
 
-function example(query) {
+function example(query, callback) {
   var response = urban(query);
-  response.first( function(json) {
+  response.first(function(json) {
+    var example;
     if(json.example && query.length > 0){
-      bot.speak(json.example);
+      example = json.example;
     }
     else {
-      bot.speak("I don't have an example of that.");
+      example = "I don't have an example of that.";
     }
+    callback(example);
   });
 }
 
@@ -189,12 +193,12 @@ bot.on('speak', function (data) {
         break;
       case "define":
         if (command.length > 1) {
-          define(command.slice(1).join(" "));
+          define(command.slice(1).join(" "), function(definition) {bot.speak(definition);});
         }
         break;
       case "example":
         if (command.length > 1) {
-          example(command.slice(1).join(" ")); 
+          example(command.slice(1).join(" "), function(example) {bot.speak(example);});
         }
         break;
       case "do":
