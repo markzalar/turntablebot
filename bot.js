@@ -52,95 +52,60 @@ function lookup(query, callback) {
       entry['definition'] = json.definition;
     }
     else {
-      entry['definition'] = "I don't know that one.";
+      entry['definition'] = "";
     }
     if(json.example && query.length > 0){
       entry['example'] = json.example;
     }
     else {
-      entry['example'] = "I don't have an example of that.";
+      entry['example'] = "";
     }
     callback(entry);
   });
 }
 
+function sayRandomPhrase(phrases) {
+  if(phrases.length > 0) {
+    bot.speak(phrases[Math.floor(Math.random()*phrases.length)]);
+  }
+}
+
 function speakAboutSong(data) {
   var phrases = [];
-  var d = data;
+  var song = data.room.metadata.current_song.metadata.song;
+  var artist = data.room.metadata.current_song.metadata.artist;
+  var album = data.room.metadata.current_song.metadata.album;
 
-  function getSongExample(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.example && query.length > 0){
-        phrases.push(json.example);
+  lookup(song, function(entry) {
+    if(entry['definition'].length > 0) {
+      phrases.push(entry['definition']);
+    }
+    if(entry['example'].length > 0) {
+      phrases.push(entry['example']);
+    }
+    lookup(artist, function(entry) {
+      if(entry['definition'].length > 0) {
+        phrases.push(entry['definition']);
       }
-      getSongDefinition(query);
-    });
-  }
-
-  function getSongDefinition(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.definition && query.length > 0){
-        phrases.push(json.definition);
-      }
-      getArtistExample(d.room.metadata.current_song.metadata.artist);
-    });
-  }
-
-  function getArtistExample(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.example && query.length > 0){
-        phrases.push(json.example);
-      }
-      getArtistDefinition(query);
-    });
-  }
-
-  function getArtistDefinition(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.definition && query.length > 0){
-        phrases.push(json.definition);
+      if(entry['example'].length > 0) {
+        phrases.push(entry['example']);
       }
       if(phrases.length > 0) {
-        saySomething();
+        sayRandomPhrase(phrases);
       }
       else {
-        getAlbumExample(d.room.metadata.current_song.metadata.album); 
+        lookup(song, function(entry) {
+          if(entry['definition'].length > 0) {
+            phrases.push(entry['definition']);
+          }
+          if(entry['example'].length > 0) {
+            phrases.push(entry['example']);
+          }
+          sayRandomPhrase(phrases);
+        });
       }
     });
-  }
-
-  function getAlbumExample(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.example && query.length > 0){
-        phrases.push(json.example);
-      }
-      getAlbumDefinition(query);
-    });
-  }
-
-  function getAlbumDefinition(query) {
-    var response = urban(query);
-    response.first(function(json) {
-      if(json.definition && query.length > 0){
-        phrases.push(json.definition);
-      }
-      saySomething(); 
-    });
-  }
-
-  function saySomething() {
-    if(phrases.length > 0) {
-      bot.speak(phrases[Math.floor(Math.random()*phrases.length)]);
-    }
-  }
-
-  getSongExample(d.room.metadata.current_song.metadata.song);
-
+  });
 }
 
 function answerYesNo() {
@@ -185,12 +150,26 @@ bot.on('speak', function (data) {
         break;
       case "define":
         if (command.length > 1) {
-          lookup(command.slice(1).join(" "), function(entry) {bot.speak(entry['definition']);});
+          lookup(command.slice(1).join(" "), function(entry) {
+            if(entry['definition'].length > 0) {
+              bot.speak(entry['definition']);
+            }
+            else {
+              bot.speak("I don't know a definition for that");
+            }
+          });
         }
         break;
       case "example":
         if (command.length > 1) {
-          lookup(command.slice(1).join(" "), function(entry) {bot.speak(entry['example']);});
+          lookup(command.slice(1).join(" "), function(entry) {
+            if(entry['example'].length > 0) {
+              bot.speak(entry['example']);
+            }
+            else {
+              bot.speak("I don't know an example of that");
+            }
+          });
         }
         break;
       case "do":
