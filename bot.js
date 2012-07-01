@@ -8,8 +8,7 @@ var ROOMID = globals.ROOMID;
 var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
 var autobob = true;
 var chatty = false;
-var countdownName = 'DJ XXXXX';
-var countdownScore = '10000';
+var countdownScore = [1000, 3000, 10000, 20000];
 var scoreReached = false;
 var currentlyDJing = false;
 var bot = new Bot(AUTH, USERID, ROOMID);
@@ -248,12 +247,12 @@ bot.on('update_votes', function(data) {
     for (var i = 0; i < data2.users.length; i++) {
       if (data2.users[i].userid == currDJ) {
         var name = data2.users[i].name;
-        if (name == countdownName){
-          var points = data2.users[i].points;
-          if (points < countdownScore){
-            bot.speak(countdownScore - points);
+        var points = data2.users[i].points;
+        for (var i = 0; i < countdownScore.length; i++) {
+          if ((points < countdownScore[i]) && (points > (countdownScore[i] - 50))){
+            bot.speak(countdownScore[i] - points);
           }
-          else if (points == countdownScore) {
+          else if (points == countdownScore[i]) {
             if (!scoreReached) {
               scoreReached = true;
               celebrate(name);
@@ -303,5 +302,55 @@ bot.on('rem_dj', function(data) {
 });
 
 function celebrate(name) {
+  var phrases = [];
+  phrases.push("http://i.imgur.com/ThTIK.gif");
+  phrases.push("http://i.imgur.com/fdxqb.gif");
+  phrases.push("http://i.imgur.com/Wg30M.gif");
+  phrases.push("http://i.imgur.com/AxBf6.gif");
+  phrases.push("http://i.imgur.com/SnV8L.gif");
+  phrases.push("http://i.imgur.com/uiLIi.gif");
+  phrases.push("http://i.imgur.com/G9wDI.gif");
+  phrases.push("http://i.imgur.com/mGUXG.gif");
+  phrases.push("http://i.imgur.com/lDT7o.gif");
+  phrases.push("http://i.imgur.com/1lSYs.gif");
+  phrases.push("http://i.imgur.com/kGedl.gif");
+  phrases.push("http://i.imgur.com/ocY1w.gif");
+  phrases.push("http://i.imgur.com/u276s.gif");
+  phrases.push("http://i.imgur.com/neAVc.gif");
+  phrases.push("http://chzgifs.files.wordpress.com/2011/04/groovyconductorp1.gif");
+  phrases.push("http://i.imgur.com/qAXVs.gif");
+  phrases.push("http://i.imgur.com/u32TL.gif");
+  phrases.push("http://i.minus.com/irG2kMg4qnvIS.gif");
+  phrases.push("http://i.imgur.com/aarEk.gif");
+  phrases.push("http://i.imgur.com/rNqoG.gif");
+  phrases.push("http://gifs.gifbin.com/200sw35799sw.gif");
+  phrases.push("http://i.imgur.com/16NYX.gif");
+  phrases.push("http://i.imgur.com/qhLXn.gif");
+  phrases.push("http://gifs.gifbin.com/reverse-sw3yu28swyuyu8.gif");
+  phrases.push("http://i.imgur.com/HyqRk.gif");
+  phrases.push("http://gifsoup.com/view1/3731992/sexytime-gregg-o.gif");
+  phrases.push("http://i.minus.com/ikqx3g.gif");
+  phrases.push("http://i.imgur.com/yA6aZ.gif");
+  phrases.push("http://i.imgur.com/YKPeT.gif");
+  phrases.push("http://i.imgur.com/F9BbH.gif");
+  phrases.push("http://i.imgur.com/TwG2L.jpg");
+  phrases.push("http://i.imgur.com/LapZi.gif");
+  phrases.push("http://i.imgur.com/j9c91.gif");
+  phrases.push("http://i.imgur.com/tts7t.gif");
+  phrases.push("http://i.imgur.com/K7UeP.gif");
+  phrases.push("http://www.reactiongifs.com/wp-content/uploads/2012/05/wtrbi1.gif");
+  phrases.push("http://i.imgur.com/HrxQE.gif");
+  phrases.push("http://i.imgur.com/dW7Jg.gif");
+  phrases.push("http://www.reactiongifs.com/wp-content/gallery/yes/kevthumb.gif");
+  phrases.push("http://i.imgur.com/igmqE.gif");
+  phrases.push("http://i.imgur.com/3WuUh.gif");
+
   bot.speak("wooooooo " + name);
+  sleep(5000);
+  for (var i = 0; i < 10; i++) {
+    var randomIndex = Math.floor(Math.random()*phrases.length);
+    bot.speak(phrases[randomIndex]);
+    delete phrases[randomIndex];
+    sleep(5000);
+  }
 }
