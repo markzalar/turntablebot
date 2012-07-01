@@ -1,10 +1,15 @@
 var Bot = require('ttapi');
 var http = require('http');
+var OAuth = require('oauth').OAuth;
 var urban = require('urban');
 var globals = require('./globals');
 var AUTH = globals.AUTH;
 var USERID = globals.USERID;
 var ROOMID = globals.ROOMID;
+var TWITTER_TOKEN = globals.TWITTER_TOKEN;
+var TWITTER_SECRET = globals.TWITTER_SECRET;
+var TWITTER_CONSUMERKEY = globals.CONSUMERKEY;
+var TWITTER_CONSUMERSECRET = globals.CONSUMERSECRET;
 var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
 var autobob = true;
 var chatty = false;
@@ -12,6 +17,15 @@ var countdownScore = [1000, 3000, 10000, 20000];
 var scoreReached = false;
 var currentlyDJing = false;
 var bot = new Bot(AUTH, USERID, ROOMID);
+twitterer = new OAuth(
+                          "https://api.twitter.com/oauth/request_token",
+                          "https://api.twitter.com/oauth/access_token",
+                          TWITTER_CONSUMERKEY,
+                          TWITTER_CONSUMERSECRET,
+                          "1.0",
+                          null,
+                          "HMAC-SHA1"
+                    );
 
 function sleep(milliseconds) {
   var start = new Date().getTime();
@@ -118,6 +132,31 @@ function answerYesNo() {
   bot.speak(phrases[Math.floor(Math.random()*phrases.length)]);
 }
 
+function tweet(text) {
+  twitterer.post("http://api.twitter.com/1/statuses/update.json",
+                 TWITTER_TOKEN,
+                 TWITTER_SECRET,
+                 ({'status': text}),
+                 "application/json",
+                 function (error, data, response2) {
+                  if (error) {
+                    console.log('Error: '+JSON.stringify(error)+'\n');
+                    for (i in response2) {
+                      out = i + ' : ';
+                      try {
+                        out += response2[i];
+                      }
+                      catch (err) {}
+                      out += '\n';
+                      console.log(out);
+                    }
+                  }
+                  else {
+                    console.log('Twitter status updated.');
+                  }
+                 });
+}
+
 bot.on('speak', function (data) {
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
@@ -185,6 +224,11 @@ bot.on('speak', function (data) {
       case "should":
         if (data.text.substr(-1) === "?") {
           answerYesNo();
+        }
+        break;
+      case "tweet":
+        if (command.length > 1) {
+          tweet(command.slice(1).join(" "));
         }
         break;
       default:
