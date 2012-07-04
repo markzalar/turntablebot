@@ -159,6 +159,36 @@ function tweet(text) {
 
 bot.on('speak', function (data) {
   console.log(data.name + ": " + data.text);
+  if (data.name == '@TaintYourBot') {
+    var t = data.text;
+    if ((t.indexOf("My head is already boppin!") != -1) || (t.indexOf("you can't give yourself a bonus.") != -1)) {
+      var phrases = [];
+      phrases.push("JOWNED!");
+      phrases.push("http://i.imgur.com/u5z9f.gif");
+      phrases.push("http://bit.ly/HHiJu7");
+      phrases.push("http://bit.ly/rlEkMq");
+      phrases.push("http://bit.ly/spkLfN");
+      phrases.push("http://bit.ly/IyuYK8");
+      phrases.push("http://bit.ly/pODnFx");
+      phrases.push("http://bit.ly/ue5eyn");
+      phrases.push("http://bit.ly/puBDiL");
+      phrases.push("http://bit.ly/nOUlEA");
+      phrases.push("http://bit.ly/mQ8dFa");
+      phrases.push("http://bit.ly/vrfwKy");
+      phrases.push("http://bit.ly/p7IMzD");
+      phrases.push("http://bit.ly/KUYQ3x");
+      phrases.push("http://i.imgur.com/u5z9f.gif");
+      phrases.push("http://i.imgur.com/asDd5.gif");
+      phrases.push("http://bit.ly/LoaW6M");
+      bot.speak(phrases[Math.floor(Math.random()*phrases.length)]);
+    }
+    else if (t.indexOf("THAR") != -1) {
+      bot.speak("YARRRRRR!");
+    }
+    else if (t.indexOf("Yay!") != -1) {
+      bot.speak("Yay!");
+    }
+  }
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
       switch (command[0]) {
@@ -433,7 +463,6 @@ function celebrate(name) {
   phrases.push("http://bit.ly/nbjRaE");
   phrases.push("http://bit.ly/InWHbM");
   phrases.push("http://bit.ly/gRhr5X");
-
   bot.speak("wooooooo " + name);
   sleep(5000);
   for (var i = 0; i < 10; i++) {
