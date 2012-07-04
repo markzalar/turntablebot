@@ -158,6 +158,7 @@ function tweet(text) {
 }
 
 bot.on('speak', function (data) {
+  console.log(data.name + ": " + data.text);
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
       switch (command[0]) {
