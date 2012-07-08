@@ -468,7 +468,7 @@ function celebrate(name) {
   for (var i = 0; i < 10; i++) {
     var randomIndex = Math.floor(Math.random()*phrases.length);
     bot.speak(phrases[randomIndex]);
-    delete phrases[randomIndex];
+    phrases.splice(randomIndex,1);
     sleep(5000);
   }
 }
