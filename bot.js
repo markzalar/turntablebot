@@ -269,6 +269,9 @@ bot.on('speak', function (data) {
 });
 
 bot.on('newsong', function(data) {
+  if (scoreReached) {
+    scoreReached = false;
+  }
   if (autobob){
     //start bobbing when a new song starts after waiting a random number of seconds first 
     sleep((Math.floor(Math.random()*2) + 1) * 1000);
