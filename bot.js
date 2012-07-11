@@ -17,7 +17,7 @@ var countdownScore = [1000, 3000, 10000, 20000];
 var scoreReached = false;
 var currentlyDJing = false;
 var bot = new Bot(AUTH, USERID, ROOMID);
-twitterer = new OAuth(
+var twitterer = new OAuth(
                           "https://api.twitter.com/oauth/request_token",
                           "https://api.twitter.com/oauth/access_token",
                           TWITTER_CONSUMERKEY,
