@@ -191,7 +191,7 @@ bot.on('speak', function (data) {
   }
   if (data.text.substring(0,COMMAND_TRIGGER.length) == COMMAND_TRIGGER) {
       var command = data.text.substring(COMMAND_TRIGGER.length).split(/\s+/);
-      switch (command[0]) {
+      switch (command[0].toLowerCase()) {
       case "autobob":
         if (command.length == 1) {
           toggleAutobob();
