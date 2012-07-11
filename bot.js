@@ -213,6 +213,10 @@ bot.on('speak', function (data) {
       case "bounce":
         bot.vote('up');
         break;
+      case "shukkle":
+        bot.vote('up');
+        bot.speak('fo shukkle my knuckle');
+        break;
       case "stop":
       case "lame":
         bot.vote('down');
