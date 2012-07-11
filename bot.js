@@ -326,11 +326,11 @@ bot.on('update_votes', function(data) {
       if (data2.users[i].userid == currDJ) {
         var name = data2.users[i].name;
         var points = data2.users[i].points;
-        for (var i = 0; i < countdownScore.length; i++) {
-          if ((points < countdownScore[i]) && (points > (countdownScore[i] - 50))){
-            bot.speak(countdownScore[i] - points);
+        for (var j = 0; j < countdownScore.length; j++) {
+          if ((points < countdownScore[j]) && (points > (countdownScore[j] - 50))){
+            bot.speak(countdownScore[j] - points);
           }
-          else if (points == countdownScore[i]) {
+          else if (points == countdownScore[j]) {
             if (!scoreReached) {
               scoreReached = true;
               celebrate(name);
