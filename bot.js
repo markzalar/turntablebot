@@ -304,6 +304,10 @@ bot.on('newsong', function(data) {
       bot.remDj();
     }
   });
+  var song = data.room.metadata.current_song.metadata.song;
+  var artist = data.room.metadata.current_song.metadata.artist;
+  var currentDJ = data.room.metadata.current_song.djname;
+  console.log(currentDJ + " started playing \"" + song + "\" by " + artist);
 });
 
 bot.on('update_votes', function(data) {
