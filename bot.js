@@ -10,6 +10,9 @@ var TWITTER_TOKEN = globals.TWITTER_TOKEN;
 var TWITTER_SECRET = globals.TWITTER_SECRET;
 var TWITTER_CONSUMERKEY = globals.CONSUMERKEY;
 var TWITTER_CONSUMERSECRET = globals.CONSUMERSECRET;
+var lastFMAPIKey = globals.lastFMAPIKey;
+var lastFMSecret = globals.lastFMSecret;
+var lastFMSessionKey = globals.lastFMSessionKey;
 var COMMAND_TRIGGER = globals.COMMAND_TRIGGER;
 var autobob = true;
 var chatty = false;
@@ -156,6 +159,60 @@ function tweet(text) {
                   }
                  });
 }
+
+function getLastFMCallSignature(artist, track, currTime) {
+  var utf8_artist = artist.toString("utf8");
+  var utf8_track = track.toString("utf8");
+  var utf8_timestamp = currTime.toString("utf8");
+  var toBeSigned = "api_key"+lastFMAPIKey+"artist"+utf8_artist+"methodtrack.scrobble"+"sk"+lastFMSessionKey+"timestamp"+utf8_timestamp+"track"+utf8_track+lastFMSecret;
+  var sig = require('crypto').createHash('md5').update(toBeSigned).digest('hex');
+  return sig;
+}
+
+function getLastFMPostData(artist, track, currTime, lastFMAPIKey, lastFMAPISignature, lastFMSessionKey) {
+  return 'method=track.scrobble' +
+         '&artist=' + artist +
+         '&track=' + encodeURIComponent(track) +
+         '&timestamp=' + currTime +
+         '&api_key=' + lastFMAPIKey +
+         '&api_sig=' + lastFMAPISignature +
+         '&sk=' + lastFMSessionKey;
+
+}
+
+function getLastFMOptions(postData) {
+  var options = {
+    host: 'ws.audioscrobbler.com',
+    port: 80,
+    method: 'POST',
+    path: '/2.0/',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'content-length': postData.length
+    }
+  };
+  return options;
+}
+
+function scrobbleToLastFM(track, artist) {
+  var currTime = (Math.floor(Date.now()/ 1000)).toString(10);
+  var apiSignature = getLastFMCallSignature(artist, track, currTime);
+  var postData = getLastFMPostData(artist, track, currTime, lastFMAPIKey, apiSignature, lastFMSessionKey);
+  var lastFMOptions = getLastFMOptions(postData);
+  var lastFMRequest =  http.request(lastFMOptions, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {});
+  });
+
+
+  lastFMRequest.on('error', function(e) {
+    console.log('problem with LastFM request: ' + e.message);
+  });
+
+  lastFMRequest.write(postData);
+  lastFMRequest.end();
+}
+
 
 bot.on('speak', function (data) {
   console.log(data.name + ": " + data.text);
@@ -308,6 +365,7 @@ bot.on('newsong', function(data) {
   var artist = data.room.metadata.current_song.metadata.artist;
   var currentDJ = data.room.metadata.current_song.djname;
   console.log(currentDJ + " started playing \"" + song + "\" by " + artist);
+  scrobbleToLastFM(song, artist);
 });
 
 bot.on('update_votes', function(data) {
